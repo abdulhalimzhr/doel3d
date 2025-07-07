@@ -58,3 +58,16 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /generated/prisma
 /uploads/*
 src/schema.gql
+
+# Docker
+.env.docker
+.env.docker.local
+*.sql
+docker-compose.override.yml
+
+# Database backups
+backup_*.sql
+
+# Keep template files but ignore actual environment files
+!.env.docker.dev
+!.env.docker.prod

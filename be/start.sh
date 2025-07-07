@@ -32,7 +32,7 @@ command_exists() {
 # Function to check if PostgreSQL is running
 check_postgres() {
     if command_exists psql; then
-        if pg_isready >/dev/null 2>&1; then
+        if PGPASSWORD=postgres123 pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
             return 0
         else
             return 1
@@ -40,6 +40,63 @@ check_postgres() {
     else
         return 1
     fi
+}
+
+# Function to check if Docker is running
+check_docker() {
+    if command_exists docker; then
+        if docker info >/dev/null 2>&1; then
+            return 0
+        else
+            return 1
+        fi
+    else
+        return 1
+    fi
+}
+
+# Function to start PostgreSQL with Docker
+start_postgres_docker() {
+    print_status "Starting PostgreSQL with Docker..."
+    
+    if ! check_docker; then
+        print_error "Docker is not running. Please start Docker Desktop and try again."
+        return 1
+    fi
+    
+    # Check if the container is already running
+    if docker ps | grep -q "doel3d-postgres"; then
+        print_success "PostgreSQL container is already running"
+        return 0
+    fi
+    
+    # Check if the container exists but is stopped
+    if docker ps -a | grep -q "doel3d-postgres"; then
+        print_status "Starting existing PostgreSQL container..."
+        docker start doel3d-postgres
+    else
+        print_status "Creating and starting PostgreSQL container..."
+        docker-compose up -d postgres
+    fi
+    
+    # Wait for PostgreSQL to be ready
+    print_status "Waiting for PostgreSQL to be ready..."
+    local max_attempts=30
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        if check_postgres; then
+            print_success "PostgreSQL is ready!"
+            return 0
+        fi
+        
+        print_status "Attempt $attempt/$max_attempts - waiting for PostgreSQL..."
+        sleep 2
+        attempt=$((attempt + 1))
+    done
+    
+    print_error "PostgreSQL failed to start after $max_attempts attempts"
+    return 1
 }
 
 # Main script
@@ -70,37 +127,19 @@ if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$NODE_VERSION" | sort -V | head -n1)"
     print_warning "Node.js version $NODE_VERSION detected. Version 18+ is recommended."
 fi
 
-# Check if DATABASE_URL is set
-if [ -z "$DATABASE_URL" ]; then
-    print_warning "DATABASE_URL environment variable is not set."
-    print_status "Please set your DATABASE_URL. Example:"
-    echo "export DATABASE_URL=\"postgresql://username:password@localhost:5432/doel3d\""
-    
-    # Prompt user for database URL
-    read -p "Enter your DATABASE_URL (or press Enter to use default local setup): " user_db_url
-    
-    if [ -n "$user_db_url" ]; then
-        export DATABASE_URL="$user_db_url"
-    else
-        print_status "Using default local PostgreSQL setup..."
-        export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/doel3d"
-    fi
+# Check if DATABASE_URL is set or load from .env
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
 fi
 
-print_status "Using DATABASE_URL: $DATABASE_URL"
+print_status "Using DATABASE_URL from .env file"
 
-# Check PostgreSQL connection
-print_status "Checking PostgreSQL connection..."
-if ! check_postgres; then
-    print_warning "PostgreSQL is not running or not accessible."
-    print_status "Please ensure PostgreSQL is installed and running."
-    print_status "On macOS with Homebrew: brew services start postgresql"
-    print_status "On Ubuntu/Debian: sudo service postgresql start"
-    
-    read -p "Do you want to continue anyway? (y/N): " continue_anyway
-    if [ "$continue_anyway" != "y" ] && [ "$continue_anyway" != "Y" ]; then
-        exit 1
-    fi
+# Start PostgreSQL with Docker
+print_status "Setting up PostgreSQL database..."
+if ! start_postgres_docker; then
+    print_error "Failed to start PostgreSQL with Docker"
+    print_status "You can start it manually with: docker-compose up -d postgres"
+    exit 1
 fi
 
 # Install dependencies

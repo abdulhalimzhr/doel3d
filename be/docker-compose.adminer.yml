@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  adminer:
+    image: adminer:latest
+    container_name: doel3d-adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - doel3d-network
+    restart: unless-stopped
+
+networks:
+  doel3d-network:
+    external: true
