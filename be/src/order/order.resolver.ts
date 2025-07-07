@@ -15,8 +15,8 @@ export class OrderResolver {
   }
 
   @Query(() => [OrderOutput])
-  getOrders(): Promise<OrderOutput[]> {
-    return this.orderService.getOrders();
+  listOrder(): Promise<OrderOutput[]> {
+    return this.orderService.listOrder();
   }
 
   @Mutation(() => OrderOutput)
