@@ -40,4 +40,10 @@ export class OrderService {
   async getOrder(orderId: string): Promise<Order | null> {
     return this.prisma.order.findUnique({ where: { orderId } });
   }
+
+  async getOrders(): Promise<Order[]> {
+    return this.prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

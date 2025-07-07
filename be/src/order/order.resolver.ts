@@ -14,6 +14,11 @@ export class OrderResolver {
     return this.orderService.getOrder(orderId);
   }
 
+  @Query(() => [OrderOutput])
+  getOrders(): Promise<OrderOutput[]> {
+    return this.orderService.getOrders();
+  }
+
   @Mutation(() => OrderOutput)
   async submitOrder(
     @Args({ name: 'file', type: () => UploadScalar }) file: FileUpload,
