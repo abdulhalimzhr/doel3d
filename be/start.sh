@@ -195,8 +195,8 @@ fi
 # Start the development server
 print_status "Starting NestJS development server..."
 print_success "Application is starting up..."
-print_status "The server will be available at: http://localhost:3000"
-print_status "GraphQL Playground will be available at: http://localhost:3000/graphql"
+print_status "The server will be available at: http://localhost:4000"
+print_status "GraphQL Playground will be available at: http://localhost:4000/graphql"
 print_status ""
 print_status "Press Ctrl+C to stop the server"
 print_status "========================================="

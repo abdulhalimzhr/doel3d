@@ -1,7 +1,8 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { Navbar } from '@/components/navbar';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,7 +31,21 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        {children}
+        <main className="min-h-screen flex flex-col justify-between bg-background text-foreground">
+          {children}
+        </main>
+        <footer className="text-center text-sm py-4 text-muted-foreground">
+          © {new Date().getFullYear()}{' '}
+          <Link
+            className="font-bold"
+            href="/"
+          >
+            Doel3D
+          </Link>
+          . Built with{' '}
+          <Link href="https://nextjs.org/">Next.js </Link> and{' '}
+          <Link href="https://nestjs.org">NestJS</Link>.
+        </footer>
       </body>
     </html>
   );

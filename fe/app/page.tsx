@@ -9,7 +9,8 @@ export default function Home() {
       {/* Hero */}
       <section className="pt-20 pb-16 px-6 text-center">
         <h1 className="text-5xl font-bold mb-4">
-          🎯 Doel3D — Estimasi Biaya Cetak STL
+          Doel3D <br />
+          Estimasi Biaya Cetak STL
         </h1>
         <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
           Upload file STL kamu, atur konfigurasi print, dan lihat
@@ -42,12 +43,6 @@ export default function Home() {
           />
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="text-center text-sm py-4 text-muted-foreground">
-        © {new Date().getFullYear()} Doel3D. Dibuat dengan 💙 oleh
-        kamu.
-      </footer>
     </main>
   );
 }

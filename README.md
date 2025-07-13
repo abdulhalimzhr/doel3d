@@ -29,7 +29,93 @@ A comprehensive 3D printing cost estimation platform built with modern web techn
 
 ## � Quick Start
 
-### **One-Command Setup**
+### **🎯 One-Command Full Stack Setup**
+
+Start both frontend and backend services with a single command:
+
+```bash
+# Clone the repository
+git clone git@github.com:abdulhalimzhr/doel3d.git
+cd doel3d
+
+# Start full development environment
+./start-dev.sh
+```
+
+**Or using npm:**
+```bash
+npm run dev
+```
+
+This automated script will:
+- ✅ Set up Docker PostgreSQL database
+- ✅ Install all dependencies (backend + frontend)
+- ✅ Generate Prisma client
+- ✅ Run database migrations
+- ✅ Start both backend and frontend servers
+- ✅ Provide real-time monitoring and logs
+
+### **📊 Development URLs**
+
+After running the startup script, you can access:
+
+- **🎨 Frontend (Next.js)**: http://localhost:3000
+- **🔧 Backend (NestJS)**: http://localhost:4000
+- **📊 GraphQL Playground**: http://localhost:4000/graphql
+- **🗄️ Database Admin**: http://localhost:8080 (run `npm run db:adminer`)
+
+### **🔧 Individual Service Management**
+
+If you prefer to run services separately:
+
+```bash
+# Backend only
+npm run start:be
+
+# Frontend only
+npm run start:fe
+
+# Database only
+npm run db:start
+```
+
+### **⚙️ Development Scripts**
+
+```bash
+# Install all dependencies
+npm run install:all
+
+# Build all services
+npm run build:all
+
+# Database management
+npm run db:start          # Start PostgreSQL
+npm run db:stop           # Stop PostgreSQL
+npm run db:restart        # Restart PostgreSQL
+npm run db:status         # Check database status
+npm run db:studio         # Open Prisma Studio
+npm run db:adminer        # Open database admin interface
+
+# Linting
+npm run lint:all          # Lint both backend and frontend
+npm run lint:be           # Lint backend only
+npm run lint:fe           # Lint frontend only
+
+# Cleanup
+npm run clean             # Remove all node_modules and build files
+```
+
+### **🪟 Windows Users**
+
+For Windows users, use the batch file:
+
+```cmd
+start-dev.bat
+```
+
+### **📝 Backend-Only Setup (Alternative)**
+
+If you only want to run the backend:
 
 ```bash
 git clone git@github.com:abdulhalimzhr/doel3d.git
@@ -45,7 +131,7 @@ This automated script will:
 - Run database migrations
 - Start the development server
 
-### **Manual Setup (Alternative)**
+### **🔧 Manual Setup (Step by Step)**
 
 1. **Clone the repository**
 
